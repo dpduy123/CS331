@@ -1,0 +1,12 @@
+.env
+.env.local
+Hình Cà Phê/
+node_modules/
+dist/
+.claude
+.vscode/
+.DS_Store
+Thumbs.db
+__pycache__/
+kaggle_dataset_label/
+docs/

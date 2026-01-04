@@ -1,0 +1,35 @@
+# YOLOv8 Training Docker Image with GPU support
+# Requires NVIDIA Docker runtime
+
+FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
+RUN pip install --no-cache-dir \
+    ultralytics \
+    opencv-python-headless \
+    kagglehub \
+    matplotlib \
+    pyyaml
+
+# Create directories
+RUN mkdir -p /app/data /app/runs /app/weights
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV YOLO_VERBOSE=true
+
+# Default command
+CMD ["python", "-c", "import torch; from ultralytics import YOLO; print(f'YOLOv8 ready! CUDA: {torch.cuda.is_available()}')"]

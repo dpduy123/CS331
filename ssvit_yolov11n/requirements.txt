@@ -1,0 +1,17 @@
+# SSViT-YOLOv11n Requirements
+# Install with: pip install -r requirements.txt
+
+# PyTorch (install separately with CUDA support for GPU training)
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Core dependencies
+numpy>=1.24.0
+opencv-python-headless>=4.8.0  # headless for server (no GUI)
+pillow>=10.0.0
+matplotlib>=3.7.0
+tensorboard>=2.14.0
+tqdm>=4.66.0
+pyyaml>=6.0
+scipy>=1.11.0

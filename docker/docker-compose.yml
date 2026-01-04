@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # CPU-only training
+  yolo-cpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: coffee-yolo-cpu
+    volumes:
+      - ../kaggle_dataset_round1:/app/data
+      - ./runs:/app/runs
+      - ./weights:/app/weights
+      - ~/.kaggle:/root/.kaggle:ro  # Kaggle credentials
+    environment:
+      - CUDA_VISIBLE_DEVICES=""  # Force CPU
+    working_dir: /app
+    command: >
+      python -c "
+      from ultralytics import YOLO
+      import yaml
+      import os
+
+      # Setup data.yaml
+      data_config = {
+          'path': '/app/data',
+          'train': 'images/train',
+          'val': 'images/val',
+          'nc': 5,
+          'names': ['barely-riped', 'over-riped', 'riped', 'semi-riped', 'unriped']
+      }
+
+      with open('/app/data.yaml', 'w') as f:
+          yaml.dump(data_config, f)
+
+      # Train
+      model = YOLO('yolov8n.pt')
+      model.train(
+          data='/app/data.yaml',
+          epochs=100,
+          imgsz=640,
+          batch=4,
+          patience=20,
+          project='/app/runs',
+          name='coffee_cpu',
+          device='cpu',
+          workers=0,
+      )
+      print('Training complete!')
+      "
+
+  # GPU training (requires nvidia-docker)
+  yolo-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    container_name: coffee-yolo-gpu
+    volumes:
+      - ../kaggle_dataset_round1:/app/data
+      - ./runs:/app/runs
+      - ./weights:/app/weights
+      - ~/.kaggle:/root/.kaggle:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    working_dir: /app
+    command: >
+      python -c "
+      from ultralytics import YOLO
+      import yaml
+
+      data_config = {
+          'path': '/app/data',
+          'train': 'images/train',
+          'val': 'images/val',
+          'nc': 5,
+          'names': ['barely-riped', 'over-riped', 'riped', 'semi-riped', 'unriped']
+      }
+
+      with open('/app/data.yaml', 'w') as f:
+          yaml.dump(data_config, f)
+
+      model = YOLO('yolov8n.pt')
+      model.train(
+          data='/app/data.yaml',
+          epochs=100,
+          imgsz=640,
+          batch=16,
+          patience=20,
+          project='/app/runs',
+          name='coffee_gpu',
+          device=0,
+          workers=0,
+          amp=False,
+      )
+      print('Training complete!')
+      "

@@ -1,0 +1,40 @@
+# Coffee Bean Ripeness Detection Dataset
+# For YOLOv11 Training
+#
+# Directory structure:
+# dataset/
+# ├── train/
+# │   ├── images/
+# │   └── labels/
+# ├── val/
+# │   ├── images/
+# │   └── labels/
+# └── test/ (optional)
+#     ├── images/
+#     └── labels/
+
+# Dataset root path (absolute or relative to this file)
+path: /Users/nguyenloan/Desktop/CS331/CoffeeBeanDataset/dataset
+
+# Train/val/test directories (relative to path)
+train: train/images
+val: val/images
+test: test/images
+
+# Number of classes
+nc: 5
+
+# Class names (must match label indices 0-4)
+names:
+  0: barely-riped
+  1: over-riped
+  2: riped
+  3: semi-riped
+  4: unriped
+
+# Class descriptions (for reference)
+# barely-riped: Beans just starting to ripen, mostly green with slight color change
+# over-riped:   Beans past optimal ripeness, dark/brown color
+# riped:        Fully ripe beans, optimal for harvesting (red/cherry color)
+# semi-riped:   Partially ripe, yellow-orange color
+# unriped:      Completely unripe, green beans

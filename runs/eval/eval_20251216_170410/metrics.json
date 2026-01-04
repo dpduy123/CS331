@@ -1,0 +1,34 @@
+{
+  "precision": 0.0,
+  "recall": 0.0,
+  "f1": 0.0,
+  "map50": 0.0,
+  "map50_95": 0.0,
+  "per_class": {
+    "barely-riped": {
+      "ap50": 0.0,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "over-riped": {
+      "ap50": 0.0,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "riped": {
+      "ap50": 0.0,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "semi-riped": {
+      "ap50": 0.0,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "unriped": {
+      "ap50": 0.0,
+      "precision": 0.0,
+      "recall": 0.0
+    }
+  }
+}

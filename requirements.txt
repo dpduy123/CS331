@@ -1,0 +1,30 @@
+# Core dependencies for YOLOv8 + Label Studio workflow
+ultralytics>=8.0.0
+label-studio>=1.11.0
+label-studio-sdk>=0.0.30
+label-studio-ml>=1.0.9
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Computer Vision
+opencv-python>=4.8.0
+pillow>=10.0.0
+
+# Data Processing
+numpy>=1.24.0
+pandas>=2.0.0
+pyyaml>=6.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilities
+tqdm>=4.65.0
+requests>=2.31.0
+joblib>=1.3.0

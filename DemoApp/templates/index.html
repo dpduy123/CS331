@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Bean Pseudo-Labeling Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Coffee Bean Pseudo-Labeling Tool</h1>
+            <p class="subtitle">Upload images to detect and label coffee bean ripeness</p>
+        </header>
+
+        <!-- Model Selection -->
+        <div class="model-section">
+            <h3>Select Model</h3>
+            <div class="model-selector">
+                {% for key, info in models.items() %}
+                <div class="model-option {% if key == current_model %}active{% endif %} {% if not info.available %}disabled{% endif %}"
+                     data-model="{{ key }}"
+                     {% if info.available %}onclick="selectModel('{{ key }}')"{% endif %}>
+                    <div class="model-name">{{ info.name }}</div>
+                    <div class="model-desc">{{ info.description }}</div>
+                    {% if not info.available %}
+                    <div class="model-status">Not Available</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="current-model" id="currentModelStatus">
+                {% if current_model %}
+                Current: <strong>{{ models[current_model].name if current_model in models else 'None' }}</strong>
+                {% else %}
+                <span class="warning">No model loaded. Please add model files to DemoApp/models/</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Class Legend -->
+        <div class="legend">
+            <h3>Classes</h3>
+            <div class="legend-items">
+                <span class="legend-item barely-riped">barely-riped</span>
+                <span class="legend-item over-riped">over-riped</span>
+                <span class="legend-item riped">riped</span>
+                <span class="legend-item semi-riped">semi-riped</span>
+                <span class="legend-item unriped">unriped</span>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📷</div>
+                <p>Drag & drop images here or click to browse</p>
+                <p class="upload-hint">Supports: JPG, JPEG, PNG, BMP, WEBP</p>
+                <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.bmp,.webp" hidden>
+            </div>
+            <button class="btn btn-primary" id="processBtn" disabled>
+                <span class="btn-text">Process Images</span>
+                <span class="btn-loading" hidden>Processing...</span>
+            </button>
+        </div>
+
+        <!-- Preview Section (before processing) -->
+        <div class="preview-section" id="previewSection" hidden>
+            <h3>Selected Images (<span id="fileCount">0</span>)</h3>
+            <div class="preview-grid" id="previewGrid"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" hidden>
+            <div class="results-header">
+                <h2>Detection Results</h2>
+                <div class="results-actions">
+                    <button class="btn btn-success" id="downloadAllBtn">
+                        Download All Labels (ZIP)
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn">
+                        Clear Results
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-grid" id="resultsGrid"></div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay" hidden>
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>Processing images...</p>
+                <p class="loading-progress" id="loadingProgress"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Fullscreen Image Modal (outside container for proper fullscreen) -->
+    <div class="image-modal" id="imageModal" hidden>
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-image-container">
+                <img id="modalImage" src="" alt="Detection Result">
+            </div>
+            <div class="modal-info">
+                <span id="modalFilename"></span>
+                <span id="modalDetections"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
